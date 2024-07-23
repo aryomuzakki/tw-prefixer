@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefix Tailwind CSS ClassNames in your code</title>
+
+  <!-- normalize -->
+  <link rel="stylesheet" href="/assets/css/modern-normalize.css">
+
+  <!-- toastify -->
+  <link rel="stylesheet" href="assets/css/toastify.min.css">
+
+  <style>
+    body {
+      font-family: Inter, "Open Sans", sans-serif;
+    }
+
+    body main,
+    body header,
+    body footer {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+      margin: 0;
+    }
+
+    header {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: x-large;
+    }
+
+    .sub-header {
+      margin-bottom: 1rem;
+    }
+
+    .sub-header p {
+      text-align: center;
+    }
+
+    footer {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    main h3 {
+      text-align: center;
+      margin: 0 0 1rem 0;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+    }
+
+    input,
+    textarea {
+      border-radius: 4px;
+    }
+
+    .textarea-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    label.toggle-wrap,
+    label.toggle-modifiers-check {
+      user-select: none;
+      font-size: small;
+    }
+
+    label.toggle-wrap input,
+    label.toggle-modifiers-check input {
+      transform: translateY(2.5px);
+    }
+
+    textarea {
+      min-width: 70vw;
+      height: 27dvh;
+      padding: .25rem .5rem;
+      --white-space-wrap: pre-wrap;
+    }
+
+    .textarea-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .textarea-subheader {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    textarea#initialCode {
+      white-space: var(--white-space-wrap);
+    }
+
+    textarea#prefixedCode {
+      white-space: var(--white-space-wrap);
+    }
+
+    input#prefixString {
+      width: 8rem;
+      padding: .25rem .5rem;
+    }
+
+    #copyResult {
+      padding: .5rem 1rem;
+      border: none;
+      background: linear-gradient(to left top, #007d1f, #048426, #088c2d, #0c9334, #0f9b3b);
+      color: #ffffff;
+      font-size: small;
+      width: max-content;
+      margin: auto;
+    }
+
+    #copyResult:hover {
+      opacity: 90%;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+    }
+
+    footer ul {
+      list-style: none;
+      margin: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="">
+
+    <header>
+      <h1>
+        Tailwind CSS ClassNames Prefixer
+      </h1>
+    </header>
+
+    <main>
+      <div class="sub-header">
+        <h3>Paste your HTML or JSX code into textarea !</h3>
+        <p>Work for all classes in docs, negative classes, simple arbitrary classes, simple modifier, and "!important"
+          marked classes.</p>
+        <p>More complex arbitrary and modifier related classes might not work properly.</p>
+      </div>
+      <div class="form-wrapper">
+
+        <div class="textarea-wrapper">
+          <div class="textarea-header">
+            <label for="prefixString">
+              <span>Prefix :</span>
+              <input type="text" name="prefixString" id="prefixString" placeholder="tw-" value="tw-">
+            </label>
+            <div class="textarea-subheader">
+              <label class="toggle-modifiers-check"
+                title="Ignore Checking for Modifier, Only check for text after the last colon">
+                <input type="checkbox" id="ignoreModCheck">
+                <span>Ignore Modifiers Check</span>
+              </label>
+              <label class="toggle-wrap">
+                <input type="checkbox" data-target="initialCode" checked>
+                <span>Wrap Text</span>
+              </label>
+            </div>
+          </div>
+          <textarea name="initialCode" id="initialCode"
+            placeholder="&lt;div class=&quot;bg-slate-700 px-8 md:px-16 ...&quot;&gt;...&lt;/div&gt;"></textarea>
+        </div>
+
+        <div class="textarea-wrapper">
+          <div class="textarea-header">
+            <div></div>
+            <div>
+              <label class="toggle-wrap">
+                <input type="checkbox" data-target="prefixedCode" checked>
+                <span>Wrap Text</span>
+              </label>
+            </div>
+          </div>
+          <textarea name="prefixedCode" id="prefixedCode" readonly></textarea>
+          <button type="button" id="copyResult" data-clipboard-target="#prefixedCode">Copy Result</button>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer>
+      <p>
+        2024 &copy;
+        <a href="https://linkedin.com/in/aryomuzakki" target="_blank" rel="noreferrer noopener">
+          Muhammad Aryo Muzakki
+        </a>
+      </p>
+      <ul class="social">
+        <li class="github">
+          <a href="https://github.com/aryomuzakki/tw-prefixer" target="_blank" rel="noreferrer noopener">
+            <svg role="img" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+              <title>GitHub</title>
+              <path
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </footer>
+
+  </div>
+
+  <!-- clipboard js -->
+  <script src="assets/js/clipboard.min.js"></script>
+  <!-- toastify -->
+  <script src="assets/js/toastify-js.js"></script>
+
+  <script>
+    (async () => {
+      const prefixStringEl = document.getElementById("prefixString")
+      const resultTextarea = document.getElementById("prefixedCode")
+      const wrapToggles = document.querySelectorAll(".toggle-wrap > input")
+      const ignoreModCheckEl = document.getElementById("ignoreModCheck");
+
+      const inputTextarea = document.getElementById("initialCode");
+
+      inputTextarea.innerHTML = `<p className="fixed -left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">`
+        + `\n\t<span class='special:bg-slate-800 lg:dark:myother-text'>Get started by editing</span>`
+        + `\n\t<code className="font-mono foo:bar-baz font-bold dark:some:thing-here text-[10px] before:content-[''] before:-top-2">this text</code>`
+        + `\n\t<span className={\`myother-[class] hover:font-bold dark:hover:text-[#e5e5e5]\`}>or paste your code here</span>`
+        + `\n</p>`
+
+      const toggleWrapText = (ev) => {
+        if (ev.target.dataset.target === resultTextarea.id) {
+          ev.target.checked ?
+            resultTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
+            :
+            resultTextarea.style.setProperty("--white-space-wrap", "pre")
+        } else if (ev.target.dataset.target === inputTextarea.id) {
+          ev.target.checked ?
+            inputTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
+            :
+            inputTextarea.style.setProperty("--white-space-wrap", "pre")
+        }
+      }
+
+      wrapToggles.forEach(toggle => {
+        toggle.addEventListener("change", toggleWrapText)
+      })
+
+      const toggleModCheck = () => {
+        handleAddPrefix();
+      }
+
+      ignoreModCheckEl.addEventListener("change", toggleModCheck)
+
+      const clipboardJS = new ClipboardJS("#copyResult");
+
+      clipboardJS.on("success", () => {
+        Toastify({
+          text: "Result Copied",
+          gravity: "bottom",
+          position: "center",
+          style: {
+            background: "linear-gradient(to left top, #007d1f, #048426, #088c2d, #0c9334, #0f9b3b)",
+          }
+        }).showToast();
+      })
+      clipboardJS.on("error", () => {
+        Toastify({
+          text: "Fail Copying, Try Again Later",
+          gravity: "bottom",
+          position: "center",
+          style: {
+            background: "linear-gradient(to left top, #b80a0a, #c0160d, #c71e11, #cf2614, #d72d17)",
+          }
+        }).showToast();
+      })
+
+      const htmlEntities = await (fetch("/assets/html-entities.json").then(res => res.ok ? res.json() : []));
+
+      // get prepared default class
+      const crawledClassNames = await (fetch("/assets/tw-classes-crawled-full-array.json").then(res => res.ok ? res.json() : []));
+
+      const arbitraryClassNames = []
+
+      const modifierClassNames = await (fetch("/assets/tw-variants-or-modifiers.json").then(res => res.ok ? res.json() : []));
+
+      const handleAddPrefix = async (ev) => {
+        ev?.preventDefault()
+
+        const prefixStr = prefixStringEl.value
+
+        const isArbitraryClass = (str, fullClassName) => {
+          // code here
+          return true
+        }
+
+        const isModifier = (str, fullClassName) => {
+          // todo: reverse the check : 
+          // str.startsWith(modifierClassName)
+
+          return modifierClassNames.all.includes(str)
+        }
+
+        // get classnames from value
+        let resultCode = inputTextarea.value
+
+        const regexes = [
+          // using double quote or jsx interpolation string {``}
+          /(class(?:Name|)=)("|{`)([^"`]*)?("|`})/g,
+          // using single quote
+          /(class(?:Name|)=)(')([^']*)?(')/g,
+        ]
+
+        regexes.forEach(rgx => {
+          resultCode = resultCode.replace(rgx, (_, $1, $2, $3, $4) => {
+
+            // append prefix for each classname
+            const prefixedClassNames = $3.split(" ").filter(cn => cn != "").map(cName => {
+              // todo: check arbitrary class instead of square bracket only
+
+              // note: arbitrary value and arbitrary variants
+              // https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values
+              // https://tailwindcss.com/docs/adding-custom-styles#arbitrary-variants
+
+              const addClassNamePrefix = (className) => {
+
+                if (className.includes("[")) {
+                  // class have an arbitrary value
+
+                  const classNameNoAV = className.split("[")[0]
+                  if (classNameNoAV.includes(":")) {
+
+                    const classNameModifiers = classNameNoAV.split(":").slice(0, -1)
+                    const isAllModifier = ignoreModCheckEl.checked ? true : classNameModifiers.every(modifier => {
+                      return isModifier(modifier)
+                    })
+
+                    const classNameNoAVNoM = classNameNoAV.split(":").pop()
+                    isArbitraryClass(classNameNoAVNoM)
+
+                    if (isAllModifier) {
+
+                      // check if the default class starts with classname without modifier
+                      if (
+                        crawledClassNames.some(defClass => defClass.startsWith(classNameNoAVNoM) ||
+                          (classNameNoAVNoM.slice(1) === "-" && defClass.startsWith(classNameNoAVNoM.slice(1))))
+                      ) {
+                        return classNameModifiers.join(":") + ":" + (classNameNoAVNoM.startsWith("-") ? classNameNoAVNoM.substr(0, 1) + prefixStr + classNameNoAVNoM.substr(1) : prefixStr + classNameNoAVNoM) + "[" + className.split("[").slice(1).join("[")
+                      }
+                    }
+
+
+                  } else if (
+                    crawledClassNames.some(defClass => defClass.startsWith(classNameNoAV) ||
+                      (classNameNoAV.slice(1) === "-" && defClass.startsWith(classNameNoAV.slice(1))))
+                  ) {
+                    return (classNameNoAV.startsWith("-") ? classNameNoAV.substr(0, 1) + prefixStr + classNameNoAV.substr(1) : prefixStr + classNameNoAV) + "[" + className.split("[").slice(1).join("[")
+                  }
+                }
+
+                if (className.includes(":")) {
+                  // class don't have arbitrary value, but have modifier
+
+                  const classNameNoM = className.split(":").pop()
+
+                  const classNameModifiers = className.split(":").slice(0, -1)
+                  const isAllModifier = ignoreModCheckEl.checked ? true : classNameModifiers.every(modifier => {
+                    return isModifier(modifier)
+                  })
+
+                  if (isAllModifier) {
+
+                    // check if classname without modifier is starts with the default class
+                    if (crawledClassNames.some(defClass => classNameNoM.startsWith(defClass) || classNameNoM.startsWith(`-${defClass}`))) {
+                      return classNameModifiers.join(":") + ":" + (classNameNoM.startsWith("-") ? classNameNoM.substr(0, 1) + prefixStr + classNameNoM.substr(1) : prefixStr + classNameNoM)
+                    }
+                  }
+
+                } else if (crawledClassNames.some(defClass => className.startsWith(defClass) || className.startsWith(`-${defClass}`))) {
+                  // class don't have arbitrary value nor modifier
+
+                  return (className.startsWith("-") ? className.substr(0, 1) + prefixStr + className.substr(1) : prefixStr + className)
+                }
+
+                return className
+
+              }
+
+              if (!cName.startsWith("!")) {
+                // no !important prefixed classnames
+
+                return addClassNamePrefix(cName)
+
+              } else if (cName.startsWith("!")) {
+                // have !important prefixed classnames
+
+                className = addClassNamePrefix(cName.slice(1))
+                return "!" + className
+              }
+
+
+              return className
+            })
+
+            return $1 + $2 + prefixedClassNames.join(" ") + $4
+          });
+        })
+
+        
+        // escape html entity code
+        htmlEntities.forEach(entity => {
+          if (resultCode.includes(entity)) {
+            const regex = new RegExp(`&(${entity.slice(1)})`, "g")
+            resultCode = resultCode.replace(regex, "&amp;$1")
+          }
+        })
+
+        resultTextarea.innerHTML = resultCode
+      }
+
+      inputTextarea.addEventListener("input", handleAddPrefix)
+      prefixStringEl.addEventListener("input", handleAddPrefix)
+
+      // first run
+      handleAddPrefix();
+    })();
+  </script>
+</body>
+
+</html>
