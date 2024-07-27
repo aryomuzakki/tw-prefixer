@@ -287,217 +287,124 @@
   <!-- toastify -->
   <script src="assets/js/toastify-js.js"></script>
 
+  <!-- lodash.debounce -->
+  <script src="assets/js/lodash-debounce.min.js"></script>
+
   <script>
-    (async () => {
-      const prefixStringEl = document.getElementById("prefixString")
-      const resultTextarea = document.getElementById("prefixedCode")
-      const wrapToggles = document.querySelectorAll(".toggle-wrap > input")
-      const ignoreModCheckEl = document.getElementById("ignoreModCheck");
+    // (() => {
+    // get prepared default class
+    // window.CRAWLED_CLASS_NAMES = await (fetch("/assets/tw-classes-crawled-full-array.json").then(res => res.ok ? res.json() : []));
 
-      const inputTextarea = document.getElementById("initialCode");
+    window.arbitraryClassNames = []
 
-      inputTextarea.innerHTML = `<p className="fixed -left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">`
-        + `\n\t<span class='special:bg-slate-800 lg:dark:myother-text'>Get started by editing</span>`
-        + `\n\t<code className="font-mono foo:bar-baz font-bold dark:some:thing-here text-[10px] before:content-[''] before:-top-2">this text</code>`
-        + `\n\t<span className={\`myother-[class] hover:font-bold dark:hover:text-[#e5e5e5]\`}>or paste your code here</span>`
-        + `\n</p>`
+    // window.MODIFIER_CLASS_NAMES = await (fetch("/assets/tw-variants-or-modifiers.json").then(res => res.ok ? res.json() : []));
+    // })();
+  </script>
 
-      const toggleWrapText = (ev) => {
-        if (ev.target.dataset.target === resultTextarea.id) {
-          ev.target.checked ?
-            resultTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
-            :
-            resultTextarea.style.setProperty("--white-space-wrap", "pre")
-        } else if (ev.target.dataset.target === inputTextarea.id) {
-          ev.target.checked ?
-            inputTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
-            :
-            inputTextarea.style.setProperty("--white-space-wrap", "pre")
-        }
-      }
+  <!-- default class constant -->
+  <script src="assets/js/tw-classes-crawled.js"></script>
+  <script src="assets/js/tw-modifiers-classes.js"></script>
 
-      wrapToggles.forEach(toggle => {
-        toggle.addEventListener("change", toggleWrapText)
-      })
+  <!-- tw-prefixer -->
+  <script src="assets/js/tw-prefixer.js"></script>
 
-      const toggleModCheck = () => {
-        handleAddPrefix();
-      }
+  <script>
+      (async () => {
+        const prefixStringEl = document.getElementById("prefixString");
+        const resultTextarea = document.getElementById("prefixedCode");
+        const wrapToggles = document.querySelectorAll(".toggle-wrap > input");
+        const ignoreModCheckEl = document.getElementById("ignoreModCheck");
 
-      ignoreModCheckEl.addEventListener("change", toggleModCheck)
+        const inputTextarea = document.getElementById("initialCode");
 
-      const clipboardJS = new ClipboardJS("#copyResult");
+        inputTextarea.innerHTML = `<p className="fixed -left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">`
+          + `\n\t<span class='special:bg-slate-800 lg:dark:myother-text'>Get started by editing</span>`
+          + `\n\t<code className="font-mono foo:bar-baz font-bold dark:some:thing-here text-[10px] before:content-[''] before:-top-2">this text</code>`
+          + `\n\t<span className={\`myother-[class] hover:font-bold dark:hover:text-[#e5e5e5]\`}>or paste your code here</span>`
+          + `\n</p>`;
 
-      clipboardJS.on("success", () => {
-        Toastify({
-          text: "Result Copied",
-          gravity: "bottom",
-          position: "center",
-          style: {
-            background: "linear-gradient(to left top, #007d1f, #048426, #088c2d, #0c9334, #0f9b3b)",
+        const toggleWrapText = (ev) => {
+          if (ev.target.dataset.target === resultTextarea.id) {
+            ev.target.checked ?
+              resultTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
+              :
+              resultTextarea.style.setProperty("--white-space-wrap", "pre")
+          } else if (ev.target.dataset.target === inputTextarea.id) {
+            ev.target.checked ?
+              inputTextarea.style.setProperty("--white-space-wrap", "pre-wrap")
+              :
+              inputTextarea.style.setProperty("--white-space-wrap", "pre")
           }
-        }).showToast();
-      })
-      clipboardJS.on("error", () => {
-        Toastify({
-          text: "Fail Copying, Try Again Later",
-          gravity: "bottom",
-          position: "center",
-          style: {
-            background: "linear-gradient(to left top, #b80a0a, #c0160d, #c71e11, #cf2614, #d72d17)",
-          }
-        }).showToast();
-      })
-
-      const htmlEntities = await (fetch("/assets/html-entities.json").then(res => res.ok ? res.json() : []));
-
-      // get prepared default class
-      const crawledClassNames = await (fetch("/assets/tw-classes-crawled-full-array.json").then(res => res.ok ? res.json() : []));
-
-      const arbitraryClassNames = []
-
-      const modifierClassNames = await (fetch("/assets/tw-variants-or-modifiers.json").then(res => res.ok ? res.json() : []));
-
-      const handleAddPrefix = async (ev) => {
-        ev?.preventDefault()
-
-        const prefixStr = prefixStringEl.value
-
-        const isArbitraryClass = (str, fullClassName) => {
-          // code here
-          return true
         }
 
-        const isModifier = (str, fullClassName) => {
-          // todo: reverse the check : 
-          // str.startsWith(modifierClassName)
+        wrapToggles.forEach(toggle => {
+          toggle.addEventListener("change", toggleWrapText);
+        })
 
-          return modifierClassNames.all.includes(str)
-        }
+        const clipboardJS = new ClipboardJS("#copyResult");
 
-        // get classnames from value
-        let resultCode = inputTextarea.value
+        clipboardJS.on("success", () => {
+          Toastify({
+            text: "Result Copied",
+            gravity: "bottom",
+            position: "center",
+            style: {
+              background: "linear-gradient(to left top, #007d1f, #048426, #088c2d, #0c9334, #0f9b3b)",
+            }
+          }).showToast();
+        })
+        clipboardJS.on("error", () => {
+          Toastify({
+            text: "Fail Copying, Try Again Later",
+            gravity: "bottom",
+            position: "center",
+            style: {
+              background: "linear-gradient(to left top, #b80a0a, #c0160d, #c71e11, #cf2614, #d72d17)",
+            }
+          }).showToast();
+        })
 
-        const regexes = [
-          // using double quote or jsx interpolation string {``}
-          /(class(?:Name|)=)("|{`)([^"`]*)?("|`})/g,
-          // using single quote
-          /(class(?:Name|)=)(')([^']*)?(')/g,
-        ]
+        const htmlEntities = await (fetch("/assets/html-entities.json").then(res => res.ok ? res.json() : []));
 
-        regexes.forEach(rgx => {
-          resultCode = resultCode.replace(rgx, (_, $1, $2, $3, $4) => {
+        const handleAddPrefix = (ev) => {
+          ev?.preventDefault();
 
-            // append prefix for each classname
-            const prefixedClassNames = $3.split(" ").filter(cn => cn != "").map(cName => {
-              // todo: check arbitrary class instead of square bracket only
+          console.log(`prefixing ${inputTextarea.value.length} charater, ${inputTextarea.value.split("\n").length} lines of code`);
 
-              // note: arbitrary value and arbitrary variants
-              // https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values
-              // https://tailwindcss.com/docs/adding-custom-styles#arbitrary-variants
-
-              const addClassNamePrefix = (className) => {
-
-                if (className.includes("[")) {
-                  // class have an arbitrary value
-
-                  const classNameNoAV = className.split("[")[0]
-                  if (classNameNoAV.includes(":")) {
-
-                    const classNameModifiers = classNameNoAV.split(":").slice(0, -1)
-                    const isAllModifier = ignoreModCheckEl.checked ? true : classNameModifiers.every(modifier => {
-                      return isModifier(modifier)
-                    })
-
-                    const classNameNoAVNoM = classNameNoAV.split(":").pop()
-                    isArbitraryClass(classNameNoAVNoM)
-
-                    if (isAllModifier) {
-
-                      // check if the default class starts with classname without modifier
-                      if (
-                        crawledClassNames.some(defClass => defClass.startsWith(classNameNoAVNoM) ||
-                          (classNameNoAVNoM.slice(1) === "-" && defClass.startsWith(classNameNoAVNoM.slice(1))))
-                      ) {
-                        return classNameModifiers.join(":") + ":" + (classNameNoAVNoM.startsWith("-") ? classNameNoAVNoM.substr(0, 1) + prefixStr + classNameNoAVNoM.substr(1) : prefixStr + classNameNoAVNoM) + "[" + className.split("[").slice(1).join("[")
-                      }
-                    }
-
-
-                  } else if (
-                    crawledClassNames.some(defClass => defClass.startsWith(classNameNoAV) ||
-                      (classNameNoAV.slice(1) === "-" && defClass.startsWith(classNameNoAV.slice(1))))
-                  ) {
-                    return (classNameNoAV.startsWith("-") ? classNameNoAV.substr(0, 1) + prefixStr + classNameNoAV.substr(1) : prefixStr + classNameNoAV) + "[" + className.split("[").slice(1).join("[")
-                  }
-                }
-
-                if (className.includes(":")) {
-                  // class don't have arbitrary value, but have modifier
-
-                  const classNameNoM = className.split(":").pop()
-
-                  const classNameModifiers = className.split(":").slice(0, -1)
-                  const isAllModifier = ignoreModCheckEl.checked ? true : classNameModifiers.every(modifier => {
-                    return isModifier(modifier)
-                  })
-
-                  if (isAllModifier) {
-
-                    // check if classname without modifier is starts with the default class
-                    if (crawledClassNames.some(defClass => classNameNoM.startsWith(defClass) || classNameNoM.startsWith(`-${defClass}`))) {
-                      return classNameModifiers.join(":") + ":" + (classNameNoM.startsWith("-") ? classNameNoM.substr(0, 1) + prefixStr + classNameNoM.substr(1) : prefixStr + classNameNoM)
-                    }
-                  }
-
-                } else if (crawledClassNames.some(defClass => className.startsWith(defClass) || className.startsWith(`-${defClass}`))) {
-                  // class don't have arbitrary value nor modifier
-
-                  return (className.startsWith("-") ? className.substr(0, 1) + prefixStr + className.substr(1) : prefixStr + className)
-                }
-
-                return className
-
-              }
-
-              if (!cName.startsWith("!")) {
-                // no !important prefixed classnames
-
-                return addClassNamePrefix(cName)
-
-              } else if (cName.startsWith("!")) {
-                // have !important prefixed classnames
-
-                className = addClassNamePrefix(cName.slice(1))
-                return "!" + className
-              }
-
-
-              return className
-            })
-
-            return $1 + $2 + prefixedClassNames.join(" ") + $4
+          let start = performance.now();
+          let resultCodeStr = twPrefixer(inputTextarea.value, {
+            prefixStr: prefixStringEl.value,
+            ignoreModClassNames: ignoreModCheckEl.checked,
           });
-        })
+          let end = performance.now();
+          console.log(`done prefixing in ${end - start} ms or ${(end - start) / 1000} s`);
+          console.log(`added ${resultCodeStr.length - inputTextarea.value.length} character`);
 
+          // escape html entity code
+          htmlEntities.forEach(entity => {
+            if (resultCodeStr.includes(entity)) {
+              const regex = new RegExp(`&(${entity.slice(1)})`, "g");
+              resultCodeStr = resultCodeStr.replace(regex, "&amp;$1");
+            }
+          })
 
-        // escape html entity code
-        htmlEntities.forEach(entity => {
-          if (resultCode.includes(entity)) {
-            const regex = new RegExp(`&(${entity.slice(1)})`, "g")
-            resultCode = resultCode.replace(regex, "&amp;$1")
-          }
-        })
+          resultTextarea.innerHTML = resultCodeStr
+        }
 
-        resultTextarea.innerHTML = resultCode
-      }
+        const debouncedHandleAddPrefix = window.lodashDebounce(handleAddPrefix, 1500);
 
-      inputTextarea.addEventListener("input", handleAddPrefix)
-      prefixStringEl.addEventListener("input", handleAddPrefix)
+        inputTextarea.addEventListener("input", debouncedHandleAddPrefix);
+        prefixStringEl.addEventListener("input", debouncedHandleAddPrefix);
 
-      // first run
-      handleAddPrefix();
-    })();
+        const toggleModCheck = () => {
+          debouncedHandleAddPrefix();
+        }
+
+        ignoreModCheckEl.addEventListener("change", toggleModCheck);
+
+        // first run
+        debouncedHandleAddPrefix();
+      })();
   </script>
 </body>
 
