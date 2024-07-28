@@ -7,7 +7,7 @@ Website : https://tw-prefixer.vercel.app
 ## Features
 
  - [x] For **TailwindCSS v3**
- - [x] HTML or JSX codebase
+ - [x] HTML or JSX codebase or list of ClassNames
  - [x] Default ClassNames
  - [x] Negative ClassNames
  - [x] `!important` marked ClassNames
@@ -15,7 +15,7 @@ Website : https://tw-prefixer.vercel.app
  - [x] Simple Arbitrary value ClassNames (only match with `[`)
  - [ ] Complex Variant/Modifier ClassNames
  - [ ] Complex Arbitrary value ClassNames
- - [ ] Arbitrary variants or selectors
+ - [ ] [Arbitrary variants](https://tailwindcss.com/docs/hover-focus-and-other-states#using-arbitrary-variants) and [arbitrary properties](https://tailwindcss.com/docs/adding-custom-styles#arbitrary-properties)
  - [ ] ClassNames not in HTML attribute or JSX classNames property (e.g. inside a variable)
 
 ## Data Sources

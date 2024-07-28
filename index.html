@@ -227,6 +227,11 @@
             </label>
             <div class="textarea-subheader">
               <label class="toggle-modifiers-check"
+                title="Check All String, Search for tailwind classNames in whole string instead of class/className attribut">
+                <input type="checkbox" id="checkAllString">
+                <span>Check All String</span>
+              </label>
+              <label class="toggle-modifiers-check"
                 title="Ignore Checking for Modifier, Only check for text after the last colon">
                 <input type="checkbox" id="ignoreModCheck">
                 <span>Ignore Modifiers Check</span>
@@ -314,6 +319,7 @@
         const resultTextarea = document.getElementById("prefixedCode");
         const wrapToggles = document.querySelectorAll(".toggle-wrap > input");
         const ignoreModCheckEl = document.getElementById("ignoreModCheck");
+        const checkAllStringEl = document.getElementById("checkAllString");
 
         const inputTextarea = document.getElementById("initialCode");
 
@@ -375,6 +381,7 @@
           let resultCodeStr = twPrefixer(inputTextarea.value, {
             prefixStr: prefixStringEl.value,
             ignoreModClassNames: ignoreModCheckEl.checked,
+            checkAllStr: checkAllStringEl.checked,
           });
           let end = performance.now();
           console.log(`done prefixing in ${end - start} ms or ${(end - start) / 1000} s`);
@@ -396,14 +403,11 @@
         inputTextarea.addEventListener("input", debouncedHandleAddPrefix);
         prefixStringEl.addEventListener("input", debouncedHandleAddPrefix);
 
-        const toggleModCheck = () => {
-          debouncedHandleAddPrefix();
-        }
-
-        ignoreModCheckEl.addEventListener("change", toggleModCheck);
+        ignoreModCheckEl.addEventListener("change", debouncedHandleAddPrefix);
+        checkAllStringEl.addEventListener("change", debouncedHandleAddPrefix);
 
         // first run
-        debouncedHandleAddPrefix();
+        handleAddPrefix();
       })();
   </script>
 </body>
